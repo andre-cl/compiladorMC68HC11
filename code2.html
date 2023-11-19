@@ -1,4 +1,4 @@
-<title>compilador/code2.lst</title>
+<title>code2.lst</title>
 <p><font color="black">1: Vacio : constante EQU $1789</font></p>
 <p><font color="black">2: Vacio : var EQU $0000</font></p>
 <p><font color="black">3: Vacio : var1 EQU $0002</font></p>
@@ -10,11 +10,11 @@
 <p><font color='black'>15: 8002 </font> <font color='red'>01</font><font color='black'>				: 	NOP </font></p><p><font color='black'>16: 8003 </font> <font color='red'>01</font><font color='black'>				: 	NOP </font></p><p><font color="black">17: Vacio : salto2</font></p>
 <p><font color='black'>18: 8004 </font> <font color='red'>01</font><font color='black'>				: 	NOP </font></p><p><font color='black'>19: 8005 </font> <font color='red'>01</font><font color='black'>				: 	NOP </font></p><p><font color='black'>20: 8006 </font> <font color='red'>0 9</font><font color='black'>				: 	DEX </font></p><p><font color='black'>21: 8007</font> <font color='red'>26</font><font color='blue'> f9</font>				: 	BNE SALTO </p>
 <p><font color='black'>22: 8009</font> <font color='red'>22</font><font color='blue'> f9</font>				: 	BHI SALTO1 </p>
-<p><font color='black'>23: 800b</font> <font color='red'> 13</font><font color='blue'>07 80 100</font><font color='black'>				: 	BRCLR $07,#$80 SALTE </font></p>
-<p><font color='black'>24: 800b</font> <font color='red'> 1F</font><font color='blue'>05 aa 100</font><font color='black'>				: 	BRCLR $05,X,#$AA SALTE </font></p>
-<p><font color='black'>25: 800b</font> <font color='red'> 12</font><font color='blue'>7c 33 100</font><font color='black'>				: 	BRSET $7C,#$33 SALTE </font></p>
-<p><font color='black'>26: 800b</font> <font color='red'> 18 1E</font><font color='blue'>89 40 100</font><font color='black'>				: 	BRSET $89,Y,#$40 SALTE </font></p>
-<p><font color='black'>27: 800b</font> <font color='red'>15</font><font color='blue'> 55 77</font>				: 	BCLR $55,#$77 </p>
-<p><font color='black'>28: 800b</font> <font color='red'>14</font><font color='blue'> 49 80</font>				: 	BSET $49,#$80 </p>
-<p><font color='black'>29: 800b</font> <font color='red'>1D</font><font color='blue'> 70 88</font>				: 	BCLR $70,X,#$88 </p><p><font color='black'>30: 800b</font> <font color='red'>18 1C</font><font color='blue'> 91 7c</font>				: 	BSET $91,Y,#$7C </p><p><font color="black">32: Vacio : salte</font></p>
-<p><font color='black'>34: 800b</font> <font color='red'>7E</font><font color='blue'> 8000</font>				: 	JMP INICIO </p>
+<p><font color='black'>23: 800b</font> <font color='red'> 13</font><font color='blue'>07 80 1e</font><font color='black'>				: 	BRCLR $07,#$80 SALTE </font></p>
+<p><font color='black'>24: 800f</font> <font color='red'> 1F</font><font color='blue'>05 aa 1a</font><font color='black'>				: 	BRCLR $05,X,#$AA SALTE </font></p>
+<p><font color='black'>25: 8013</font> <font color='red'> 12</font><font color='blue'>7c 33 16</font><font color='black'>				: 	BRSET $7C,#$33 SALTE </font></p>
+<p><font color='black'>26: 8017</font> <font color='red'> 18 1E</font><font color='blue'>89 40 12</font><font color='black'>				: 	BRSET $89,Y,#$40 SALTE </font></p>
+<p><font color='black'>27: 801c</font> <font color='red'>15</font><font color='blue'> 55 77</font>				: 	BCLR $55,#$77 </p>
+<p><font color='black'>28: 801f</font> <font color='red'>14</font><font color='blue'> 49 80</font>				: 	BSET $49,#$80 </p>
+<p><font color='black'>29: 8022</font> <font color='red'>1D</font><font color='blue'> 70 88</font>				: 	BCLR $70,X,#$88 </p><p><font color='black'>30: 8025</font> <font color='red'>18 1C</font><font color='blue'> 91 7c</font>				: 	BSET $91,Y,#$7C </p><p><font color="black">32: Vacio : salte</font></p>
+<p><font color='black'>34: 8029</font> <font color='red'>7E</font><font color='blue'> 8000</font>				: 	JMP INICIO </p>

@@ -368,11 +368,137 @@ def compileInmediato(vars):
             print(f"Linea {vars['lineCounter']}: Error 7, magnitud de operando erronea")
             vars['errorList'].append(f"Linea {vars['lineCounter']}: Error 7, magnitud de operando erronea")
         return
+def compileIndexado(vars):
+    if vars['lineComponents'][1].startswith("#"):
+        print(f"Linea {vars['lineCounter']}: Error, modo de direccionamiento no soportado")
+        vars['errorList'].append(f"Linea {vars['lineCounter']}: Error, modo de direccionamiento no soportado")
+        return True
+    opIndex=vars['lineComponents'][1].split(",")
+    if len(opIndex)>1:
+        if opIndex[0].startswith("$"):
+            num=opIndex[0].removeprefix("$")
+            if len(num)==1 or len(num)==3:
+                num=f'0{num}'
+        else:
+            try:
+                num=hex(int(opIndex[0])).removeprefix("0x")
+            except ValueError: #Cambiar por uso de etiquetas
+                try:
+                    num=vars['dicVariables'][opIndex[0]]
+                except KeyError:
+                    print(f"Linea {vars['lineCounter']}: Error, variable inexistente {num}")
+                    vars['errorList'].append(f"Linea {vars['lineCounter']}: Error, variable inexistente")
+                    return True
+        if verificarRAM(num):
+            
+            if opIndex[1]=="x":
+                modoDir="indx"
+            elif opIndex[1]=="y":
+                modoDir="indy"
+            else:
+                print(f"Linea {vars['lineCounter']}: Error, indexado incorrecto")
+                vars['errorList'].append(f"Linea {vars['lineCounter']}: Error, indexado incorrecto")
+                return True
+            vars['lstLines'].append(f"{vars['lineCounter']}: {hex(vars['currentORG']).removeprefix('0x')} ({vars['instructionSet'][vars['lineComponents'][0]][modoDir]['opCode']} {num})\t\t\t\t: {vars['linePrint']}\n") #Cambiar print a escribir a archivo
+            vars['htmlLstLines'].append(f"<p><font color='black'>{vars['lineCounter']}: {hex(vars['currentORG']).removeprefix('0x')}</font> <font color='red'>{vars['instructionSet'][vars['lineComponents'][0]][modoDir]['opCode']}</font><font color='blue'> {num}</font>\t\t\t\t: {vars['linePrint']}</p>\n")
+            vars['currentORG']=vars['currentORG']+vars['instructionSet'][vars['lineComponents'][0]][modoDir]['byteSize']
+            return True
+        else:
+            if not verificarExtendido(vars['instructionSet'],vars['lineComponents'][0]):
+                print(f"Linea {vars['lineCounter']}: Error 7, magnitud de operando erronea")
+                vars['errorList'].append(f"Linea {vars['lineCounter']}: Error 7, magnitud de operando erronea")
+
+def compileDirecto(vars):
+    if vars['lineComponents'][1].startswith("#"):
+        print(f"Linea {vars['lineCounter']}: Error, modo de direccionamiento no soportado")
+        vars['errorList'].append(f"Linea {vars['lineCounter']}: Error, modo de direccionamiento no soportado")
+
+        return True
+    if vars['lineComponents'][1].startswith("$"):
+        num=vars['lineComponents'][1].removeprefix("$")
+        if len(num)==1 or len(num)==3:
+            num=f'0{num}'
+    else:
+        try:
+            num=hex(int(vars['lineComponents'][1])).removeprefix("0x")
+        except ValueError: 
+            try:
+                num=vars['dicVariables'][vars['lineComponents'][1]]
+            except KeyError:
+                print(f"Linea {vars['lineCounter']}: Error, variable inexistente {num}")
+                vars['errorList'].append(f"Linea {vars['lineCounter']}: Error, variable inexistente")
+                return True
+    if verificarRAM(num):
+        vars['lstLines'].append(f"{vars['lineCounter']}: {hex(vars['currentORG']).removeprefix('0x')} ({vars['instructionSet'][vars['lineComponents'][0]]['dir']['opCode']} {num})\t\t\t\t: {vars['linePrint']}\n") #Cambiar print a escribir a archivo
+        vars['htmlLstLines'].append(f"<p><font color='black'>{vars['lineCounter']}: {hex(vars['currentORG']).removeprefix('0x')}</font> <font color='red'>{vars['instructionSet'][vars['lineComponents'][0]]['dir']['opCode']}</font><font color='blue'> {num}</font>\t\t\t\t: {vars['linePrint']}</p>\n")
+        vars['currentORG']=vars['currentORG']+vars['instructionSet'][vars['lineComponents'][0]]['dir']['byteSize']
+        return True
+    else:
+        if not verificarExtendido(vars['instructionSet'],vars['lineComponents'][0]):
+            print(f"Linea {vars['lineCounter']}: Error 7, magnitud de operando erronea")
+            vars['errorList'].append(f"Linea {vars['lineCounter']}: Error 7, magnitud de operando erronea")
+
+def compileExtendido(vars):
+    if vars['lineComponents'][1].startswith("#"):
+        print(f"Linea {vars['lineCounter']}: Error, modo de direccionamiento no soportado")
+        vars['errorList'].append(f"Linea {vars['lineCounter']}: Error, modo de direccionamiento no soportado")
+
+        return True
+    if vars['lineComponents'][1].startswith("$"):
+        num=vars['lineComponents'][1].removeprefix("$")
+        if len(num)==1 or len(num)==3:
+                num=f'0{num}'
+    else:
+        try:
+            num=hex(int(vars['lineComponents'][1])).removeprefix("0x")
+        except ValueError:
+            if vars['lineComponents'][0]=="jmp" or vars['lineComponents'][0]=="jsr":
+                try:
+                    num=vars['dicEtiquetas'][vars['lineComponents'][1]]
+                except KeyError:
+                    print(f"Linea {vars['lineCounter']}: Error 3, etiqueta inexistente")
+                    vars['errorList'].append(f"Linea {vars['lineCounter']}: Error 3, etiqueta inexistente")
+                    return True
+            else:
+                try:
+                    num=vars['dicVariables'][vars['lineComponents'][1]]
+                except KeyError:
+                    print(f"Linea {vars['lineCounter']}: Error, variable inexistente")
+                    vars['errorList'].append(f"Linea {vars['lineCounter']}: Error, variable inexistente")
+                    return True
+    
+    if verificarRAMROM(num):
+        vars['lstLines'].append(f"{vars['lineCounter']}: {hex(vars['currentORG']).removeprefix('0x')} ({vars['instructionSet'][vars['lineComponents'][0]]['ext']['opCode']} {num})\t\t\t\t: {vars['linePrint']}\n") #Cambiar print a escribir a archivo
+        vars['htmlLstLines'].append(f"<p><font color='black'>{vars['lineCounter']}: {hex(vars['currentORG']).removeprefix('0x')}</font> <font color='red'>{vars['instructionSet'][vars['lineComponents'][0]]['ext']['opCode']}</font><font color='blue'> {num}</font>\t\t\t\t: {vars['linePrint']}</p>\n")
+        vars['currentORG']=vars['currentORG']+vars['instructionSet'][vars['lineComponents'][0]]['ext']['byteSize']
+    else:
+        print(f"Linea {vars['lineCounter']}: Error 7, magnitud de operando erronea")
+        vars['errorList'].append(f"Linea {vars['lineCounter']}: Error 7, magnitud de operando erronea")
+
+def compileRelativo(vars):
+    try:
+        dir1=vars['dicEtiquetas'][vars['lineComponents'][1]]
+        delta=int(dir1,16)-vars['currentORG']
+        if delta>128 or delta<-127:
+            print(f"Linea {vars['lineCounter']}: Error 8, salto relativo muy lejano")
+            vars['errorList'].append(f"Linea {vars['lineCounter']}: Error 8, salto relativo muy lejano")
+            return True
+        numHex=hex(int(bin(delta if delta>0 else delta+(1<<8)).removeprefix("0b"),2)).removeprefix("0x")
+        if len(numHex)==1:
+            numHex=f'0{numHex}'
+        vars['lstLines'].append(f"{vars['lineCounter']}: {hex(vars['currentORG']).removeprefix('0x')} ({vars['instructionSet'][vars['lineComponents'][0]]['rel']['opCode']} {numHex})\t\t\t\t: {vars['linePrint']}\n") #Cambiar print a escribir a archivo
+        vars['htmlLstLines'].append(f"<p><font color='black'>{vars['lineCounter']}: {hex(vars['currentORG']).removeprefix('0x')}</font> <font color='red'>{vars['instructionSet'][vars['lineComponents'][0]]['rel']['opCode']}</font><font color='blue'> {numHex}</font>\t\t\t\t: {vars['linePrint']}</p>\n")
+        vars['currentORG']=vars['currentORG']+vars['instructionSet'][vars['lineComponents'][0]]['rel']['byteSize']
+    except KeyError:
+        et=(vars['lineCounter'],vars['currentORG'],vars['lineComponents'][1],vars['linePrint'],vars['lineComponents'][0])
+        vars['queueEtiquetas'].append(et)
+        vars['currentORG']=vars['currentORG']+vars['instructionSet'][vars['lineComponents'][0]]['rel']['byteSize']
+    finally:
+        return True
 def compile(path):
     errorList=[]
     lstLines=[]
-    htmlLstLines=[f'<title>{path.removesuffix(".asc")+".lst"}</title>\n']
-    
+    htmlLstLines=[f'<title>{path.split("/")[len(path.split("/"))-1].removesuffix(".asc")+".lst"}</title>\n']
     gui=GUI()
     hasEnd=False
     num=str()
@@ -420,6 +546,7 @@ def compile(path):
                 "queueEtiquetas2":queueEtiquetas2,
                 "queueEtiquetas3":queueEtiquetas3,
                 "dicVariables":dicVariables,
+                "dicEtiquetas":dicEtiquetas,
                 "currentORG": currentORG
             }
             if isMneumonico: #Si la tiene y es una instruccion valida, revisa de qué modo de direccionamiento se trata
@@ -444,151 +571,54 @@ def compile(path):
 
                 if lineComponents[0]=="brset" or lineComponents[0]=="brclr":
                     compileBrsetAndBrclr(vars)
+                    currentORG=vars["currentORG"]
+                    queueEtiquetas2=vars["queueEtiquetas2"]
+                    queueEtiquetas3=vars["queueEtiquetas3"]
                     continue
                     
                 if lineComponents[0]=="bset" or lineComponents[0]=="bclr":
                     compileBsetAndBclr(vars)
+                    currentORG=vars["currentORG"]
+                    queueEtiquetas2=vars["queueEtiquetas2"]
+                    queueEtiquetas3=vars["queueEtiquetas3"]
                     continue
 
                 #Verificar si es inmediato
                 if verificarInmediato(instructionSet,lineComponents[0]): #Verificar que a la instruccion soporte direccionamiento inmediato
                     next=compileInmediato(vars)
+                    currentORG=vars["currentORG"]
                     if next==True:
                         continue
                     
 
                 #Verificar si es indexado
                 if verificarIndexado(instructionSet,lineComponents[0]):
-                    if lineComponents[1].startswith("#"):
-                        print(f"Linea {lineCounter}: Error, modo de direccionamiento no soportado")
-                        errorList.append(f"Linea {lineCounter}: Error, modo de direccionamiento no soportado")
+                    next=compileIndexado(vars)
+                    currentORG=vars["currentORG"]
+                    if next==True:
                         continue
-                    opIndex=lineComponents[1].split(",")
-                    if len(opIndex)>1:
-                        if opIndex[0].startswith("$"):
-                            num=opIndex[0].removeprefix("$")
-                            if len(num)==1 or len(num)==3:
-                                num=f'0{num}'
-                        else:
-                            try:
-                                num=hex(int(opIndex[0])).removeprefix("0x")
-                            except ValueError: #Cambiar por uso de etiquetas
-                                try:
-                                    num=dicVariables[opIndex[0]]
-                                except KeyError:
-                                    print(f"Linea {lineCounter}: Error, variable inexistente {num}")
-                                    errorList.append(f"Linea {lineCounter}: Error, variable inexistente")
-                                    continue
-                        if verificarRAM(num):
-                            if opIndex[1]=="x":
-                                lstLines.append(f"{lineCounter}: {hex(currentORG).removeprefix('0x')} ({instructionSet[lineComponents[0]]['indx']['opCode']} {num})\t\t\t\t: {linePrint}\n") #Cambiar print a escribir a archivo
-                                htmlLstLines.append(f"<p><font color='black'>{lineCounter}: {hex(currentORG).removeprefix('0x')}</font> <font color='red'>{instructionSet[lineComponents[0]]['indx']['opCode']}</font><font color='blue'> {num}</font>\t\t\t\t: {linePrint}</p>\n")
-                                currentORG=currentORG+instructionSet[lineComponents[0]]['indx']['byteSize']
-                            elif opIndex[1]=="y":
-                                lstLines.append(f"{lineCounter}: {hex(currentORG).removeprefix('0x')} ({instructionSet[lineComponents[0]]['indy']['opCode']} {num})\t\t\t\t: {linePrint}\n") #Cambiar print a escribir a archivo
-                                htmlLstLines.append(f"<p><font color='black'>{lineCounter}: {hex(currentORG).removeprefix('0x')}</font> <font color='red'>{instructionSet[lineComponents[0]]['indy']['opCode']}</font><font color='blue'> {num}</font>\t\t\t\t: {linePrint}</p>\n")
-                                currentORG=currentORG+instructionSet[lineComponents[0]]['indy']['byteSize']
-                            else:
-                                print(f"Linea {lineCounter}: Error, indexado incorrecto")
-                                errorList.append(f"Linea {lineCounter}: Error, indexado incorrecto")
-                            continue
-                        else:
-                            if not verificarExtendido:
-                                print(f"Linea {lineCounter}: Error 7, magnitud de operando erronea")
-                                errorList.append(f"Linea {lineCounter}: Error 7, magnitud de operando erronea")
-            
+
                 #Verificar si es directo
                 if verificarDirecto(instructionSet,lineComponents[0]):
-                    if lineComponents[1].startswith("#"):
-                        print(f"Linea {lineCounter}: Error, modo de direccionamiento no soportado")
-                        errorList.append(f"Linea {lineCounter}: Error, modo de direccionamiento no soportado")
-
+                    next=compileDirecto(vars)
+                    currentORG=vars["currentORG"]
+                    if next==True:
                         continue
-                    if lineComponents[1].startswith("$"):
-                        num=lineComponents[1].removeprefix("$")
-                        if len(num)==1 or len(num)==3:
-                            num=f'0{num}'
-                    else:
-                        try:
-                            num=hex(int(lineComponents[1])).removeprefix("0x")
-                        except ValueError: 
-                            try:
-                                num=dicVariables[lineComponents[1]]
-                            except KeyError:
-                                print(f"Linea {lineCounter}: Error, variable inexistente {num}")
-                                errorList.append(f"Linea {lineCounter}: Error, variable inexistente")
-                                continue
-                    if verificarRAM(num):
-                        lstLines.append(f"{lineCounter}: {hex(currentORG).removeprefix('0x')} ({instructionSet[lineComponents[0]]['dir']['opCode']} {num})\t\t\t\t: {linePrint}\n") #Cambiar print a escribir a archivo
-                        htmlLstLines.append(f"<p><font color='black'>{lineCounter}: {hex(currentORG).removeprefix('0x')}</font> <font color='red'>{instructionSet[lineComponents[0]]['dir']['opCode']}</font><font color='blue'> {num}</font>\t\t\t\t: {linePrint}</p>\n")
-                        currentORG=currentORG+instructionSet[lineComponents[0]]['dir']['byteSize']
-                        continue
-                    else:
-                        if not verificarExtendido:
-                            print(f"Linea {lineCounter}: Error 7, magnitud de operando erronea")
-                            errorList.append(f"Linea {lineCounter}: Error 7, magnitud de operando erronea")
 
                             
                 #Verificar si es extendido
                 if verificarExtendido(instructionSet,lineComponents[0]):
-                    if lineComponents[1].startswith("#"):
-                        print(f"Linea {lineCounter}: Error, modo de direccionamiento no soportado")
-                        errorList.append(f"Linea {lineCounter}: Error, modo de direccionamiento no soportado")
-
+                    next=compileExtendido(vars)
+                    currentORG=vars["currentORG"]
+                    if next==True:
                         continue
-                    if lineComponents[1].startswith("$"):
-                        num=lineComponents[1].removeprefix("$")
-                        if len(num)==1 or len(num)==3:
-                                num=f'0{num}'
-                    else:
-                        try:
-                            num=hex(int(lineComponents[1])).removeprefix("0x")
-                        except ValueError:
-                            if lineComponents[0]=="jmp" or lineComponents[0]=="jsr":
-                                try:
-                                    num=dicEtiquetas[lineComponents[1]]
-                                except KeyError:
-                                    print(f"Linea {lineCounter}: Error 3, etiqueta inexistente")
-                                    errorList.append(f"Linea {lineCounter}: Error 3, etiqueta inexistente")
-                                    continue
-                            else:
-                                try:
-                                    num=dicVariables[lineComponents[1]]
-                                except KeyError:
-                                    print(f"Linea {lineCounter}: Error, variable inexistente")
-                                    errorList.append(f"Linea {lineCounter}: Error, variable inexistente")
-                                    continue
-                    
-                    if verificarRAMROM(num):
-                        lstLines.append(f"{lineCounter}: {hex(currentORG).removeprefix('0x')} ({instructionSet[lineComponents[0]]['ext']['opCode']} {num})\t\t\t\t: {linePrint}\n") #Cambiar print a escribir a archivo
-                        htmlLstLines.append(f"<p><font color='black'>{lineCounter}: {hex(currentORG).removeprefix('0x')}</font> <font color='red'>{instructionSet[lineComponents[0]]['ext']['opCode']}</font><font color='blue'> {num}</font>\t\t\t\t: {linePrint}</p>\n")
-                        currentORG=currentORG+instructionSet[lineComponents[0]]['ext']['byteSize']
-                    else:
-                        print(f"Linea {lineCounter}: Error 7, magnitud de operando erronea")
-                        errorList.append(f"Linea {lineCounter}: Error 7, magnitud de operando erronea")
-                    continue
+
                 #Relativos
                 if verificarRelativo(instructionSet,lineComponents[0]):
-                    try:
-                        dir1=dicEtiquetas[lineComponents[1]]
-                        delta=int(dir1,16)-currentORG
-                        if delta>128 or delta<-127:
-                            print(f"Linea {lineCounter}: Error 8, salto relativo muy lejano")
-                            errorList.append(f"Linea {lineCounter}: Error 8, salto relativo muy lejano")
-                            continue
-                        numHex=hex(int(bin(delta if delta>0 else delta+(1<<8)).removeprefix("0b"),2)).removeprefix("0x")
-                        if len(numHex)==1:
-                            numHex=f'0{numHex}'
-                        lstLines.append(f"{lineCounter}: {hex(currentORG).removeprefix('0x')} ({instructionSet[lineComponents[0]]['rel']['opCode']} {numHex})\t\t\t\t: {linePrint}\n") #Cambiar print a escribir a archivo
-                        htmlLstLines.append(f"<p><font color='black'>{lineCounter}: {hex(currentORG).removeprefix('0x')}</font> <font color='red'>{instructionSet[lineComponents[0]]['rel']['opCode']}</font><font color='blue'> {numHex}</font>\t\t\t\t: {linePrint}</p>\n")
-                        currentORG=currentORG+instructionSet[lineComponents[0]]['rel']['byteSize']
-                        
-                    except KeyError:
-                        
-                        et=(lineCounter,currentORG,lineComponents[1],linePrint,lineComponents[0])
-                        queueEtiquetas.append(et)
-                        currentORG=currentORG+instructionSet[lineComponents[0]]['rel']['byteSize']
-                    finally:
+                    next=compileRelativo(vars)
+                    currentORG=vars["currentORG"]
+                    queueEtiquetas=vars["queueEtiquetas"]
+                    if next==True:
                         continue
 
             #Si se trata de org
@@ -597,10 +627,19 @@ def compile(path):
                         num=int(lineComponents[1].removeprefix("$"),16)
                 else:
                     num=int(lineComponents[1])
-                
-                currentORG=num
-                lstLines.append(f'\t\tORG ${hex(currentORG).removeprefix("0x")}\n')
-                htmlLstLines.append(f'<p><font color="black">{lineCounter}: Vacio : ORG ${hex(currentORG).removeprefix("0x")}</font></p>\n')
+                if len(num)==1:
+                     num=f'000{num}'
+                elif len(num)==2:
+                    num=f'000{num}'
+                elif len(num)==3:
+                    num=f'0{num}'
+                if verificarRAMROM(num):
+                    currentORG=num
+                    lstLines.append(f'\t\tORG ${hex(currentORG).removeprefix("0x")}\n')
+                    htmlLstLines.append(f'<p><font color="black">{lineCounter}: Vacio : ORG ${hex(currentORG).removeprefix("0x")}</font></p>\n')
+                else:
+                    print(f"Linea {lineCounter}: Error 7, magnitud de operando erronea")
+                    errorList.append(f"Linea {lineCounter}: Error 7, magnitud de operando erronea")
             else:
                 print(f"Linea {lineCounter}: Error 4, mneumonico inexistente")
                 errorList.append(f"Linea {lineCounter}: Error 4, mneumonico inexistente")
@@ -640,7 +679,6 @@ def compile(path):
         print(f"Linea {lineCounter+1}: Error 10, no se encuentra END")
         errorList.append(f"Linea {lineCounter+1}: Error 10, no se encuentra END")
 
-
     for element in queueEtiquetas:
         try:
             dir1=dicEtiquetas[element[2]]
@@ -655,7 +693,7 @@ def compile(path):
             lstLines=placeRel(lstLines,element,f"{element[0]}: {hex(element[1]).removeprefix('0x')} ({instructionSet[element[4]]['rel']['opCode']} {numHex})\t\t\t\t: {element[3]}\n")
             htmlLstLines=placeRelHtml(lstLines,htmlLstLines,element,f"<p><font color='black'>{element[0]}: {hex(element[1]).removeprefix('0x')}</font> <font color='red'> {instructionSet[element[4]]['rel']['opCode']}</font><font color='blue'>{numHex}</font><font color='black'>\t\t\t\t: {element[3]}</font></p>\n")
         except KeyError:
-            print(f"Linea {element[0]}: Error 3, etiqueta inexistente")
+            print(f"Linea {element[0]}: Error 3, etiqueta inexistente 1")
             errorList.append(f"Linea {element[0]}: Error 3, etiqueta inexistente")
 
     for element in queueEtiquetas2:
@@ -672,7 +710,7 @@ def compile(path):
             lstLines=placeRel(lstLines,element,f"{element[0]}: {hex(element[1]).removeprefix('0x')} ({instructionSet[element[4]]['dir']['opCode']} {element[5]} {element[6]} {numHex})\t\t\t\t: {element[3]}\n") #Cambiar print a escribir a archivo  
             htmlLstLines=placeRelHtml(lstLines,htmlLstLines,element,f"<p><font color='black'>{element[0]}: {hex(element[1]).removeprefix('0x')}</font> <font color='red'> {instructionSet[element[4]]['dir']['opCode']}</font><font color='blue'>{element[5]} {element[6]} {numHex}</font><font color='black'>\t\t\t\t: {element[3]}</font></p>\n")
         except KeyError:
-            print(f"Linea {element[0]}: Error 3, etiqueta inexistente")
+            print(f"Linea {element[0]}: Error 3, etiqueta inexistente 2")
             errorList.append(f"Linea {element[0]}: Error 3, etiqueta inexistente")
     
     for element in queueEtiquetas3:
@@ -689,7 +727,7 @@ def compile(path):
             lstLines=placeRel(lstLines,element,f"{element[0]}: {hex(element[1]).removeprefix('0x')} ({instructionSet[element[4]][element[7]]['opCode']} {element[5]} {element[6]} {numHex})\t\t\t\t: {element[3]}\n") #Cambiar print a escribir a archivo  
             htmlLstLines=placeRelHtml(lstLines,htmlLstLines,element,f"<p><font color='black'>{element[0]}: {hex(element[1]).removeprefix('0x')}</font> <font color='red'> {instructionSet[element[4]][element[7]]['opCode']}</font><font color='blue'>{element[5]} {element[6]} {numHex}</font><font color='black'>\t\t\t\t: {element[3]}</font></p>\n")
         except KeyError:
-            print(f"Linea {element[0]}: Error 3, etiqueta inexistente")
+            print(f"Linea {element[0]}: Error 3, etiqueta inexistente 3")
             errorList.append(f"Linea {element[0]}: Error 3, etiqueta inexistente")
 
     lstFile.writelines(lstLines)
@@ -698,10 +736,10 @@ def compile(path):
         errorString=""
         for error in errorList:
             errorString=errorString+error+"\n"
-        gui.mensaje(titulo=f"{len(errorList)} errores",mensaje=errorString)
+        gui.mensaje(titulo=f"Exito",mensaje=f"Se ha terminado el proceso de compilacion\n\nErrores ({len(errorList)}):\n"+errorString)
     gui.mensaje(titulo="Exito",mensaje="Se ha terminado el proceso de compilacion")
 
 def  loadInstructionSet():
     return IS.getInstructionSet()
 
-compile("compilador/reloj.asc")
+compile("compilador/code2.asc")
