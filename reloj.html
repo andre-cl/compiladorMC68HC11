@@ -1,0 +1,70 @@
+<title>compilador/reloj.lst</title>
+<p><font color="black">10: Vacio : hh EQU $0000</font></p>
+<p><font color="black">11: Vacio : hl EQU $0001</font></p>
+<p><font color="black">12: Vacio : mh EQU $0002</font></p>
+<p><font color="black">13: Vacio : ml EQU $0003</font></p>
+<p><font color="black">14: Vacio : sh EQU $0004</font></p>
+<p><font color="black">15: Vacio : sl EQU $0005</font></p>
+<p><font color="black">16: Vacio : seg EQU $0006</font></p>
+<p><font color="black">25: Vacio : ORG $8000</font></p>
+<p><font color="black">26: Vacio : inicio</font></p>
+<p><font color='black'>27: 8000</font> <font color='red'>7F</font><font color='blue'> 0000</font>				:       CLR HH </p>
+<p><font color='black'>28: 8003</font> <font color='red'>7F</font><font color='blue'> 0001</font>				:       CLR HL </p>
+<p><font color='black'>29: 8006</font> <font color='red'>7F</font><font color='blue'> 0002</font>				:       CLR MH </p>
+<p><font color='black'>30: 8009</font> <font color='red'>7F</font><font color='blue'> 0003</font>				:       CLR ML </p>
+<p><font color='black'>31: 800c</font> <font color='red'>7F</font><font color='blue'> 0004</font>				:       CLR SH </p>
+<p><font color='black'>32: 800f</font> <font color='red'>7F</font><font color='blue'> 0005</font>				:       CLR SL </p>
+<p><font color='black'>33: 8012</font> <font color='red'>7F</font><font color='blue'> 0006</font>				:     CLR SEG </p>
+<p><font color="black">34: Vacio : otro</font></p>
+<p><font color='black'>35: 8015</font> <font color='red'>7F</font><font color='blue'> 0006</font>				:    CLR SEG </p>
+<p><font color="black">36: Vacio : ciclo</font></p>
+<p><font color='black'>40: 8018</font> <font color='red'>D6</font><font color='blue'> 0005</font>				:    LDAB SL </p>
+<p><font color='black'>41: 801a</font> <font color='red'>C1</font><font color='blue'> 9</font>				:    CMPB #9 </p>
+<p><font color='black'>42: 801a</font> <font color='red'> 27</font><font color='blue'>08</font><font color='black'>				:    BEQ SIGUE </font></p>
+<p><font color='black'>43: 801c</font> <font color='red'>7C</font><font color='blue'> 0005</font>				:    INC SL </p>
+<p><font color='black'>44: 801f</font> <font color='red'>7E</font><font color='blue'> 8015</font>				:    JMP OTRO </p>
+<p><font color="black">46: Vacio : sigue</font></p>
+<p><font color='black'>47: 8022</font> <font color='red'>7F</font><font color='blue'> 0005</font>				:    CLR SL </p>
+<p><font color='black'>48: 8025</font> <font color='red'>D6</font><font color='blue'> 0004</font>				:    LDAB SH </p>
+<p><font color='black'>49: 8027</font> <font color='red'>C1</font><font color='blue'> 5</font>				:    CMPB #5 </p>
+<p><font color='black'>50: 8027</font> <font color='red'> 27</font><font color='blue'>08</font><font color='black'>				:    BEQ SIGUE1 </font></p>
+<p><font color='black'>51: 8029</font> <font color='red'>7C</font><font color='blue'> 0004</font>				:    INC SH </p>
+<p><font color='black'>52: 802c</font> <font color='red'>7E</font><font color='blue'> 8015</font>				:    JMP OTRO </p>
+<p><font color="black">54: Vacio : sigue1</font></p>
+<p><font color='black'>55: 802f</font> <font color='red'>7F</font><font color='blue'> 0004</font>				:    CLR SH </p>
+<p><font color='black'>56: 8032</font> <font color='red'>7F</font><font color='blue'> 0005</font>				:    CLR SL </p>
+<p><font color='black'>57: 8035</font> <font color='red'>D6</font><font color='blue'> 0003</font>				:    LDAB ML </p>
+<p><font color='black'>58: 8037</font> <font color='red'>C1</font><font color='blue'> 9</font>				:    CMPB #9 </p>
+<p><font color='black'>59: 8037</font> <font color='red'> 27</font><font color='blue'>08</font><font color='black'>				:    BEQ SIGUE2 </font></p>
+<p><font color='black'>60: 8039</font> <font color='red'>7C</font><font color='blue'> 0003</font>				:    INC ML </p>
+<p><font color='black'>61: 803c</font> <font color='red'>7E</font><font color='blue'> 8015</font>				:    JMP OTRO </p>
+<p><font color="black">63: Vacio : sigue2</font></p>
+<p><font color='black'>64: 803f</font> <font color='red'>7F</font><font color='blue'> 0003</font>				:    CLR ML </p>
+<p><font color='black'>65: 8042</font> <font color='red'>D6</font><font color='blue'> 0002</font>				:    LDAB MH </p>
+<p><font color='black'>66: 8044</font> <font color='red'>C1</font><font color='blue'> 5</font>				:    CMPB #5 </p>
+<p><font color='black'>67: 8044</font> <font color='red'> 27</font><font color='blue'>08</font><font color='black'>				:    BEQ SIGUE3 </font></p>
+<p><font color='black'>68: 8046</font> <font color='red'>7C</font><font color='blue'> 0002</font>				:    INC MH </p>
+<p><font color='black'>69: 8049</font> <font color='red'>7E</font><font color='blue'> 8015</font>				:    JMP OTRO </p>
+<p><font color="black">71: Vacio : sigue3</font></p>
+<p><font color='black'>72: 804c</font> <font color='red'>7F</font><font color='blue'> 0002</font>				:    CLR MH </p>
+<p><font color='black'>73: 804f</font> <font color='red'>7F</font><font color='blue'> 0003</font>				:    CLR ML </p>
+<p><font color='black'>74: 8052</font> <font color='red'>7F</font><font color='blue'> 0004</font>				:    CLR SH </p>
+<p><font color='black'>75: 8055</font> <font color='red'>7F</font><font color='blue'> 0005</font>				:    CLR SL </p>
+<p><font color='black'>77: 8058</font> <font color='red'>D6</font><font color='blue'> 0000</font>				:    LDAB HH </p>
+<p><font color='black'>78: 805a</font> <font color='red'>C1</font><font color='blue'> 2</font>				:    CMPB #2 </p>
+<p><font color='black'>79: 805a</font> <font color='red'> 27</font><font color='blue'>0c</font><font color='black'>				:    BEQ SIGUE4 </font></p>
+<p><font color='black'>80: 805c</font> <font color='red'>D6</font><font color='blue'> 0001</font>				:    LDAB HL </p>
+<p><font color='black'>81: 805e</font> <font color='red'>C1</font><font color='blue'> 9</font>				:    CMPB #9 </p>
+<p><font color='black'>82: 805e</font> <font color='red'> 27</font><font color='blue'>12</font><font color='black'>				:    BEQ SIGUE5 </font></p>
+<p><font color='black'>83: 8060</font> <font color='red'>7C</font><font color='blue'> 0001</font>				:    INC HL </p>
+<p><font color='black'>84: 8063</font> <font color='red'>7E</font><font color='blue'> 8015</font>				:    JMP OTRO </p>
+<p><font color="black">86: Vacio : sigue4</font></p>
+<p><font color='black'>87: 8066</font> <font color='red'>D6</font><font color='blue'> 0001</font>				:    LDAB HL </p>
+<p><font color='black'>88: 8068</font> <font color='red'>C1</font><font color='blue'> 3</font>				:    CMPB #3    </p>
+<p><font color='black'>89: 8068</font> <font color='red'>27</font><font color='blue'> 98</font>				:    BEQ INICIO </p>
+<p><font color='black'>90: 806a</font> <font color='red'>7C</font><font color='blue'> 0001</font>				:    INC HL </p>
+<p><font color='black'>91: 806d</font> <font color='red'>7E</font><font color='blue'> 8015</font>				:    JMP OTRO </p>
+<p><font color="black">93: Vacio : sigue5</font></p>
+<p><font color='black'>94: 8070</font> <font color='red'>7F</font><font color='blue'> 0001</font>				:    CLR HL </p>
+<p><font color='black'>95: 8073</font> <font color='red'>7C</font><font color='blue'> 0000</font>				:    INC HH </p>
+<p><font color='black'>96: 8076</font> <font color='red'>7E</font><font color='blue'> 8015</font>				:    JMP OTRO </p>

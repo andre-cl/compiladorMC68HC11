@@ -1,0 +1,69 @@
+				hh EQU $0000
+				hl EQU $0001
+				mh EQU $0002
+				ml EQU $0003
+				sh EQU $0004
+				sl EQU $0005
+				seg EQU $0006
+		ORG $8000
+				inicio
+27: 8000 (7F 0000)				:       CLR HH 
+28: 8003 (7F 0001)				:       CLR HL 
+29: 8006 (7F 0002)				:       CLR MH 
+30: 8009 (7F 0003)				:       CLR ML 
+31: 800c (7F 0004)				:       CLR SH 
+32: 800f (7F 0005)				:       CLR SL 
+33: 8012 (7F 0006)				:     CLR SEG 
+				otro
+35: 8015 (7F 0006)				:    CLR SEG 
+				ciclo
+40: 8018 (D6 0005)				:    LDAB SL 
+41: 801a (C1 9)				:    CMPB #9 
+42: 801a (27 08)				:    BEQ SIGUE 
+43: 801c (7C 0005)				:    INC SL 
+44: 801f (7E 8015)				:    JMP OTRO 
+				sigue
+47: 8022 (7F 0005)				:    CLR SL 
+48: 8025 (D6 0004)				:    LDAB SH 
+49: 8027 (C1 5)				:    CMPB #5 
+50: 8027 (27 08)				:    BEQ SIGUE1 
+51: 8029 (7C 0004)				:    INC SH 
+52: 802c (7E 8015)				:    JMP OTRO 
+				sigue1
+55: 802f (7F 0004)				:    CLR SH 
+56: 8032 (7F 0005)				:    CLR SL 
+57: 8035 (D6 0003)				:    LDAB ML 
+58: 8037 (C1 9)				:    CMPB #9 
+59: 8037 (27 08)				:    BEQ SIGUE2 
+60: 8039 (7C 0003)				:    INC ML 
+61: 803c (7E 8015)				:    JMP OTRO 
+				sigue2
+64: 803f (7F 0003)				:    CLR ML 
+65: 8042 (D6 0002)				:    LDAB MH 
+66: 8044 (C1 5)				:    CMPB #5 
+67: 8044 (27 08)				:    BEQ SIGUE3 
+68: 8046 (7C 0002)				:    INC MH 
+69: 8049 (7E 8015)				:    JMP OTRO 
+				sigue3
+72: 804c (7F 0002)				:    CLR MH 
+73: 804f (7F 0003)				:    CLR ML 
+74: 8052 (7F 0004)				:    CLR SH 
+75: 8055 (7F 0005)				:    CLR SL 
+77: 8058 (D6 0000)				:    LDAB HH 
+78: 805a (C1 2)				:    CMPB #2 
+79: 805a (27 0c)				:    BEQ SIGUE4 
+80: 805c (D6 0001)				:    LDAB HL 
+81: 805e (C1 9)				:    CMPB #9 
+82: 805e (27 12)				:    BEQ SIGUE5 
+83: 8060 (7C 0001)				:    INC HL 
+84: 8063 (7E 8015)				:    JMP OTRO 
+				sigue4
+87: 8066 (D6 0001)				:    LDAB HL 
+88: 8068 (C1 3)				:    CMPB #3    
+89: 8068 (27 98)				:    BEQ INICIO 
+90: 806a (7C 0001)				:    INC HL 
+91: 806d (7E 8015)				:    JMP OTRO 
+				sigue5
+94: 8070 (7F 0001)				:    CLR HL 
+95: 8073 (7C 0000)				:    INC HH 
+96: 8076 (7E 8015)				:    JMP OTRO 

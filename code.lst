@@ -1,0 +1,23 @@
+				constante EQU $1789
+				var EQU $0000
+				var1 EQU $0000
+				var2 EQU $0003
+		ORG $8000
+				inicio
+				salto
+10: 8000 (01)				:     NOP 
+				salto1
+12: 8001 (01)				:     NOP 
+				salto2
+14: 8002 (27 17)				: 	BEQ SALTO3 
+16: 8004 (01)				:     NOP 
+17: 8005 (01)				:     NOP 
+18: 8006 (0 9)				:     DEX 
+19: 8007 (18 A6 01)				: 	LDAA $1,y 
+22: 800a (86 00)				: 	LDAA #var1 
+23: 800c (96 00)				: 	LDAA var1 
+24: 800e (B6 0314)				: 	LDAA $314 *comentario 
+25: 8011 (26 ef)				:     BNE SALTO 
+26: 8013 (22 ee)				:     BHI SALTO1 
+28: 8015 (18 CE 4440)				: 	LDY #$4440 
+				salto3

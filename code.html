@@ -1,0 +1,19 @@
+<title>compilador/code.lst</title>
+<p><font color="black">1: Vacio : constante EQU $1789</font></p>
+<p><font color="black">2: Vacio : var EQU $0000</font></p>
+<p><font color="black">3: Vacio : var1 EQU $0000</font></p>
+<p><font color="black">4: Vacio : var2 EQU $0003</font></p>
+<p><font color="black">5: Vacio : ORG $8000</font></p>
+<p><font color="black">6: Vacio : inicio</font></p>
+<p><font color="black">8: Vacio : salto</font></p>
+<p><font color='black'>10: 8000 </font> <font color='red'>01</font><font color='black'>				:     NOP </font></p><p><font color="black">11: Vacio : salto1</font></p>
+<p><font color='black'>12: 8001 </font> <font color='red'>01</font><font color='black'>				:     NOP </font></p><p><font color="black">15: Vacio : salto2</font></p>
+<p><font color='black'>14: 8002</font> <font color='red'> 27</font><font color='blue'>17</font><font color='black'>				: 	BEQ SALTO3 </font></p>
+<p><font color='black'>16: 8004 </font> <font color='red'>01</font><font color='black'>				:     NOP </font></p><p><font color='black'>17: 8005 </font> <font color='red'>01</font><font color='black'>				:     NOP </font></p><p><font color='black'>18: 8006 </font> <font color='red'>0 9</font><font color='black'>				:     DEX </font></p><p><font color='black'>19: 8007</font> <font color='red'>18 A6</font><font color='blue'> 01</font>				: 	LDAA $1,y </p>
+<p><font color='black'>22: 800a</font> <font color='red'>86</font><font color='blue'> 00</font>				: 	LDAA #var1 </p>
+<p><font color='black'>23: 800c</font> <font color='red'>96</font><font color='blue'> 00</font>				: 	LDAA var1 </p>
+<p><font color='black'>24: 800e</font> <font color='red'>B6</font><font color='blue'> 0314</font>				: 	LDAA $314 *comentario </p>
+<p><font color='black'>25: 8011</font> <font color='red'>26</font><font color='blue'> ef</font>				:     BNE SALTO </p>
+<p><font color='black'>26: 8013</font> <font color='red'>22</font><font color='blue'> ee</font>				:     BHI SALTO1 </p>
+<p><font color='black'>28: 8015</font> <font color='red'>18 CE</font><font color='blue'> 4440</font>				: 	LDY #$4440 </p>
+<p><font color="black">29: Vacio : salto3</font></p>
