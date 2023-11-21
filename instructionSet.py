@@ -19,7 +19,7 @@ class IS:
                         break
                     op=dict() #Diccionario para cada modo de direccionamiento
                     op={
-                        "opCode": wrksht[row][2+(3*i)].value, #El codigo de operacion es la primera columna
+                        "opCode": str(wrksht[row][2+(3*i)].value), #El codigo de operacion es la primera columna
                         "clockTime": wrksht[row][2+(3*i)+1].value, #El tiempo de reloj es la segunda columna
                         "byteSize": wrksht[row][2+(3*i)+2].value #El tamaño en memoria es la tercer columna
                     }
