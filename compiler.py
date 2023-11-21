@@ -939,9 +939,11 @@ def compile(path):
         for error in errorList:
             errorString=errorString+error+"\n"
         gui.mensaje(titulo=f"Exito",mensaje=f"Se ha terminado el proceso de compilacion\n\nErrores ({len(errorList)}):\n"+errorString)
+    else:
+        gui.mensaje(titulo=f"Exito",mensaje=f"Se ha terminado el proceso de compilacion")
     
 
 def  loadInstructionSet():
     return IS.getInstructionSet()
 
-compile("compilador/reloj.asc")
+main()
