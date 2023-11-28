@@ -15,7 +15,7 @@
 18: 8006 (09)				:     DEX 
 19: 8007 (18 A6 01)				: 	LDAA $1,y 
 22: 800a (86 00)				: 	LDAA #var1 
-23: 800c (96 00)				: 	LDAA var1 
+23: 800c (96 )				: 	LDAA var1 
 24: 800e (B6 0314)				: 	LDAA $314 *comentario 
 25: 8011 (26 ef)				:     BNE SALTO 
 26: 8013 (22 ee)				:     BHI SALTO1 

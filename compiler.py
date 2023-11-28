@@ -9,9 +9,9 @@ def main():
     if opcion==1:
         root = tk.Tk()
         root.withdraw()
-        file_path = "filedialog.askopenfilename()"
+        file_path = filedialog.askopenfilename()
         if file_path.endswith(".asc"):
-            compile("file_path")
+            compile(file_path)
         elif file_path=="":
             gui.mensaje("Error","Archivo no seleccionado")
             main()
@@ -618,8 +618,11 @@ def armarLineaS19(dir,opCode,info,s19List):
         s19List.append(["<p><font color='black'> S1","len",dirLinea+"</font>",lineInfo,"checkSum"])
 
 def sumBin(numHex1,numHex2):
-    numBin1=bin(int(numHex1,16)).removeprefix("0b")
-    numBin2=bin(int(numHex2,16)).removeprefix("0b")
+    try:
+        numBin1=bin(int(numHex1,16)).removeprefix("0b")
+        numBin2=bin(int(numHex2,16)).removeprefix("0b")
+    except:
+        return "0000"
     while len(numBin1)<8:
         numBin1="0"+numBin1
     while len(numBin2)<8:
@@ -682,7 +685,8 @@ def finS19(s19List):
         s19String=element[0]+element[1]+element[2]+stringInfo+element[4]+"\n"
         s19ListString.append(s19String)
     return s19ListString
-
+def es_tabulacion_o_espacio(cadena):
+    return all(caracter.isspace() for caracter in cadena)
 def compile(path):
     errorList=[]
     lstLines=[]
@@ -709,6 +713,8 @@ def compile(path):
         if line=="\n" or line==" " or line.replace("\t"," ").strip().startswith("*") or line.replace("\t"," ").strip()=="\n" :
             continue
         newLine=line.replace("\n"," ").lower()
+        if es_tabulacion_o_espacio(newLine):
+            continue
         oldLine=newLine
         loop=True
         while loop:
@@ -946,4 +952,4 @@ def compile(path):
 def  loadInstructionSet():
     return IS.getInstructionSet()
 
-main()
+compile("compilador/code2.asc")
