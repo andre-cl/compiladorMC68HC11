@@ -358,7 +358,7 @@ def compileInmediato(vars,s19List):
                 try:
                     num=vars['dicVariables'][vars['lineComponents'][1].removeprefix("#")]
                 except KeyError:
-                    print(f"Linea {vars['lineCounter']}: Error, variable inexistente{num}")
+                    print(f"Linea {vars['lineCounter']}: Error, variable inexistente")
                     vars['errorList'].append(f"Linea {vars['lineCounter']}: Error, variable inexistente")
                     return True
         if verificarRAMROM(num):
@@ -429,7 +429,7 @@ def compileDirecto(vars,s19List):
             try:
                 num=vars['dicVariables'][vars['lineComponents'][1]]
             except KeyError:
-                print(f"Linea {vars['lineCounter']}: Error, variable inexistente {num}")
+                print(f"Linea {vars['lineCounter']}: Error, variable inexistente")
                 vars['errorList'].append(f"Linea {vars['lineCounter']}: Error, variable inexistente")
                 return True
     if verificarRAM(num):
@@ -511,7 +511,8 @@ def cmpS19(arr):
 
 
 def decHex(num):
-    return str(int(num)-1 if num.isnumeric() else 9 if num=="A" else chr(ord(dir[3])-1))
+    
+    return str(int(num)-1 if num.isnumeric() else 9 if num=="a" else chr(ord(num)-1))
 
 def incDirLinea(numHex):
     new=hex(int(numHex,16)+int("1F",16)).removeprefix("0x")
@@ -709,6 +710,7 @@ def compile(path):
     htmlLstFile=open(path.removesuffix(".asc")+".html","w+")
     s19File=open(path.removesuffix(".asc")+"(s19).html","w+")
     for line in l:
+        print(lineCounter)
         lineCounter=lineCounter+1
         if line=="\n" or line==" " or line.replace("\t"," ").strip().startswith("*") or line.replace("\t"," ").strip()=="\n" :
             continue
