@@ -952,4 +952,4 @@ def compile(path):
 def  loadInstructionSet():
     return IS.getInstructionSet()
 
-compile("compilador/code2.asc")
+main()
