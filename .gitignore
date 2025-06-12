@@ -1,2 +1,4 @@
-
-~$ins.xlsx
+__pycache__/
+build/
+compiler.spec
+tempCodeRunnerFile.py

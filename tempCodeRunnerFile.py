@@ -1,2 +1,0 @@
-
-            compile(file_path)
